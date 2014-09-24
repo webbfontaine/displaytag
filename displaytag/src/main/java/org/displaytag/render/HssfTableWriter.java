@@ -117,9 +117,10 @@ public class HssfTableWriter extends TableWriterAdapter
      * This table writer uses an HSSF workbook to write the table.
      * @param wb The HSSF workbook to write the table.
      */
-    public HssfTableWriter(HSSFWorkbook wb)
+    public HssfTableWriter(HSSFWorkbook wb, boolean decorated)
     {
         this.wb = wb;
+        this.decorated=decorated;
         utils = new ExcelUtils(wb);
     }
 
