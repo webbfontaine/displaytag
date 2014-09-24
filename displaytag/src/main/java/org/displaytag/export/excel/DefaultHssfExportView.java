@@ -48,6 +48,12 @@ public class DefaultHssfExportView implements BinaryExportView
     protected TableModel model;
     
     /**
+     * decorate export?
+     */
+    private boolean decorated;
+
+    
+    /**
      * @see org.displaytag.export.BinaryExportView#doExport(java.io.OutputStream)
      */
     @Override
@@ -72,7 +78,7 @@ public class DefaultHssfExportView implements BinaryExportView
      */
     protected HssfTableWriter getHssfTableWriter(HSSFWorkbook wb)
     {
-        return new HssfTableWriter(wb);
+        return new HssfTableWriter(wb,decorated);
     }
 
     /** 
@@ -83,6 +89,7 @@ public class DefaultHssfExportView implements BinaryExportView
             boolean includeHeader, boolean decorateValues)
     {
         this.model = model;
+        this.decorated=decorateValues;
     }
 
     /**
