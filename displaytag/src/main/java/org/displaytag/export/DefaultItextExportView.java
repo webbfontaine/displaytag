@@ -34,16 +34,16 @@ import org.displaytag.render.ItextTableWriter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
-
+import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * Exporter using iText: subclasses export to any of the iText document types, such as PDF and RTF.
  * @author Jorge L. Barroso
  * @version $Revision$ ($Author$)
  */
-public abstract class DefaultItextExportView implements BinaryExportView
-{
+public abstract class DefaultItextExportView implements BinaryExportView {
 
     /**
      * TableModel to render.
@@ -54,9 +54,7 @@ public abstract class DefaultItextExportView implements BinaryExportView
      * @see org.displaytag.export.ExportView#setParameters(TableModel, boolean, boolean, boolean)
      */
     @Override
-    public void setParameters(TableModel tableModel, boolean exportFullList, boolean includeHeader,
-        boolean decorateValues)
-    {
+    public void setParameters(TableModel tableModel, boolean exportFullList, boolean includeHeader, boolean decorateValues) {
         this.model = tableModel;
     }
 
@@ -65,8 +63,7 @@ public abstract class DefaultItextExportView implements BinaryExportView
      * @return null
      */
     @Override
-    public String getMimeType()
-    {
+    public String getMimeType() {
         return null;
     }
 
@@ -74,21 +71,22 @@ public abstract class DefaultItextExportView implements BinaryExportView
      * @see org.displaytag.export.BinaryExportView#doExport(OutputStream)
      */
     @Override
-    public void doExport(OutputStream out) throws JspException
-    {
-        try
-        {
+    public void doExport(OutputStream out) throws JspException {
+        try {
             Document document = new Document(PageSize.A4.rotate(), 60, 60, 40, 40);
-            this.initItextWriter(document, out);
+            PdfWriter w = initItextWriter(document, out);
             document.open();
-            PdfPTable table = new PdfPTable(this.model.getNumberOfColumns());
-            ItextTableWriter writer = new ItextTableWriter(table, document);
-            writer.writeTable(this.model, "-1");
-            document.add(table);
+            if (model.getRowIterator(true).hasNext()) {
+                PdfPTable table = new PdfPTable(this.model.getNumberOfColumns());
+                ItextTableWriter writer = new ItextTableWriter(table, document);
+                writer.writeTable(this.model, "-1");
+                document.add(table);
+            }else{
+                w.setPageEmpty(false);
+                document.newPage();
+            }
             document.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ItextGenerationException(e);
         }
     }
@@ -97,17 +95,17 @@ public abstract class DefaultItextExportView implements BinaryExportView
      * Initializes the iText writer used by export view to write iText document, such as PDF or RTF iText writer.
      * @param document The iText document to be written.
      * @param out The output stream to which the document is written.
+     * @return 
      * @throws DocumentException If something goes wrong during initialization.
      */
-    protected abstract void initItextWriter(Document document, OutputStream out) throws DocumentException;
+    protected abstract PdfWriter initItextWriter(Document document, OutputStream out) throws DocumentException;
 
     /**
      * Wraps iText-generated exceptions.
      * @author Fabrizio Giustina
      * @version $Revision$ ($Author$)
      */
-    static class ItextGenerationException extends BaseNestableJspTagException
-    {
+    static class ItextGenerationException extends BaseNestableJspTagException {
 
         /**
          * D1597A17A6.
@@ -118,8 +116,7 @@ public abstract class DefaultItextExportView implements BinaryExportView
          * Instantiate a new PdfGenerationException with a fixed message and the given cause.
          * @param cause Previous exception
          */
-        public ItextGenerationException(Throwable cause)
-        {
+        public ItextGenerationException(Throwable cause) {
             super(DefaultItextExportView.class, Messages.getString("DefaultItextExportView.errorexporting"), cause); //$NON-NLS-1$
             this.initCause(cause);
         }
@@ -128,8 +125,7 @@ public abstract class DefaultItextExportView implements BinaryExportView
          * @see org.displaytag.exception.BaseNestableJspTagException#getSeverity()
          */
         @Override
-        public SeverityEnum getSeverity()
-        {
+        public SeverityEnum getSeverity() {
             return SeverityEnum.ERROR;
         }
     }

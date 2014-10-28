@@ -33,22 +33,19 @@ import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 
-
 /**
  * PDF exporter using iText.
  * @author Jorge L. Barroso
  * @version $Revision$ ($Author$)
  */
-public class DefaultPdfExportView extends DefaultItextExportView
-{
+public class DefaultPdfExportView extends DefaultItextExportView {
 
     /**
      * @see org.displaytag.export.BaseExportView#getMimeType()
      * @return "application/pdf"
      */
     @Override
-    public String getMimeType()
-    {
+    public String getMimeType() {
         return "application/pdf"; //$NON-NLS-1$
     }
 
@@ -59,9 +56,10 @@ public class DefaultPdfExportView extends DefaultItextExportView
      * @throws DocumentException If something goes wrong during initialization.
      */
     @Override
-    protected void initItextWriter(Document document, OutputStream out) throws DocumentException
-    {
-        PdfWriter.getInstance(document, out).setPageEvent(new PageNumber());
+    protected PdfWriter initItextWriter(Document document, OutputStream out) throws DocumentException {
+        PdfWriter writer = PdfWriter.getInstance(document, out);
+        writer.setPageEvent(new PageNumber());
+        return writer;
     }
 
     /**
@@ -70,31 +68,24 @@ public class DefaultPdfExportView extends DefaultItextExportView
      * @author Jorge L. Barroso
      * @version $Revision$ ($Author$)
      */
-    private static class PageNumber extends PdfPageEventHelper
-    {
+    private static class PageNumber extends PdfPageEventHelper {
 
         /**
          * @see com.lowagie.text.pdf.PdfPageEventHelper#onEndPage(com.lowagie.text.pdf.PdfWriter,
          * com.lowagie.text.Document)
          */
         @Override
-        public void onEndPage(PdfWriter writer, Document document)
-        {
+        public void onEndPage(PdfWriter writer, Document document) {
             /** The headertable. */
             PdfPTable table = new PdfPTable(2);
             /** A template that will hold the total number of pages. */
             PdfTemplate tpl = writer.getDirectContent().createTemplate(100, 100);
             /** The font that will be used. */
             BaseFont helv = null;
-            try
-            {
+            try {
                 helv = BaseFont.createFont("Helvetica", BaseFont.WINANSI, false);
-            }
-            catch (DocumentException e)
-            {
-            }
-            catch (IOException e)
-            {
+            } catch (DocumentException e) {
+            } catch (IOException e) {
             }
             PdfContentByte cb = writer.getDirectContent();
             // cb.saveState();

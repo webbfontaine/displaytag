@@ -4,14 +4,14 @@
   <parent>
     <artifactId>displaytag-doc</artifactId>
     <groupId>org.displaytag</groupId>
-    <version>2.0-wf</version>
+    <version>2.0.1-wf</version>
     <relativePath>..</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.displaytag</groupId>
   <artifactId>displaytag</artifactId>
   <name>Display tag library</name>
-  <version>2.0-wf</version>
+  <version>2.0.1-wf</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -267,26 +267,6 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-clover-plugin</artifactId>
-        <version>2.4</version>
-        <!-- <groupId>com.atlassian.maven.plugins</groupId>
-        <artifactId>maven-clover2-plugin</artifactId>
-        <version>4.0.0</version>
-         -->
-        <configuration>
-          <jdk>1.5</jdk>
-          <licenseLocation>${basedir}/../clover.license</licenseLocation>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>pre-site</phase>
-            <goals>
-              <goal>instrument</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.5</version>
@@ -317,14 +297,6 @@
         </configuration>
       </plugin>
       -->
-      <plugin>
-        <artifactId>maven-clover-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <jdk>1.5</jdk>
-          <licenseLocation>${basedir}/../clover.license</licenseLocation>
-        </configuration>
-      </plugin>
     </plugins>
   </reporting>
 </project>
